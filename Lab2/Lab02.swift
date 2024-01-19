@@ -6,10 +6,15 @@
 //
 //====================================================================
 
+import SwiftUI
 import SceneKit
 
-class RotatingColouredCube: SCNScene {
+class RotatingColouredCube: SCNScene {    
     var rotAngle = 0.0 // Keep track of rotation angle
+    var rotationSpeed = 0.1
+    var distZ = 1.0
+    var isRotating = true // Keep track of if rotation is toggled
+    var isFreeCam = false // Keep track of if free cam is toggled
     var cameraNode = SCNNode() // Initialize camera node
     
     // Catch if initializer in init() fails
@@ -45,7 +50,7 @@ class RotatingColouredCube: SCNScene {
         let materials = [UIColor.red, UIColor.green, UIColor.blue, UIColor.yellow, UIColor.cyan, UIColor.magenta] // List of materials for each side
         theCube.geometry?.firstMaterial?.diffuse.contents = materials[0] // Diffuse the red colour material across the whole cube
         //Note: At this point, the cube is completely red. Try commenting lines 45-69 and running to see it!
-    
+        
         /// Comment **v
         var nextMaterial: SCNMaterial // Initialize temporary variable to store each texture
         
@@ -86,16 +91,54 @@ class RotatingColouredCube: SCNScene {
     @MainActor
     func reanimate() {
         let theCube = rootNode.childNode(withName: "The Cube", recursively: true) // Get the cube object by its name (This is where line 39 comes in)
-        rotAngle += 0.0005 // Rotate the cube by 0.0005 radians
-        // Keep the rotation angle in the range of 0 and pi
-        if rotAngle > Double.pi {
-            rotAngle -= Double.pi
+        if(isRotating){
+            rotAngle += 0.0005 // Rotate the cube by 0.0005 radians
+            // Keep the rotation angle in the range of 0 and pi
+            let tau = Double.pi * 2
+            if rotAngle > tau {
+                rotAngle -= tau
+            }
+            theCube?.eulerAngles = SCNVector3(0, rotAngle, 0) // Rotate cube by the final amount
         }
-        theCube?.eulerAngles = SCNVector3(0, rotAngle, 0) // Rotate cube by the final amount
         // Repeat increment of rotation every 10000 nanoseconds
         Task { try! await Task.sleep(nanoseconds: 10000)
             reanimate()
         }
+    }
+    
+    @MainActor
+    func handleDoubleTap() {
+        isRotating = !isRotating // Toggle rotation
+        isFreeCam = !isFreeCam // Toggle free cam
+    }
+    
+    @MainActor
+    func handleDrag(geometry: GeometryProxy) -> some Gesture{
+        let frame = geometry.frame(in: .local)
+        let center = vector_float2(x: Float(frame.midX), y: Float(frame.midY))
+        print(center)
+        return DragGesture()
+            .onChanged{value in
+                if(!self.isFreeCam){
+                    return
+                }
+                let theCube = self.rootNode.childNode(withName: "The Cube", recursively: true)
+                print(value.startLocation, value.location)
+                let relative: SCNVector3 = SCNVector3(value.startLocation.x, value.location.y, self.distZ)
+                
+                let angleAboutX :Float = atan2(center.y - Float(value.startLocation.y), 0 - Float(self.distZ)) + atan2(relative.y - center.y, Float(self.distZ) - 0)
+                
+//                let angleA = atan2( center.y - relative.y, center.x - relative.x)
+//                let angleB = atan2(Float(value.location.y) - center.y, Float(value.location.x) - center.x)
+//                let angleAboutY :Float =  angleA + angleB
+//                print(angleAboutX, angleAboutY)
+                
+                let oldWorldTransform :SCNMatrix4 = theCube!.worldTransform
+                let rotateAboutX: SCNMatrix4 = SCNMatrix4Rotate(oldWorldTransform, angleAboutX, 1, 0, 0)
+//                let rotateAboutY: SCNMatrix4 = SCNMatrix4Rotate(rotateAboutX, angleAboutY, 0, 1, 0)
+                theCube?.setWorldTransform(rotateAboutX)
+                
+            }
     }
 }
 
