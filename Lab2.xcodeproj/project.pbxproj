@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B534627E2B618AB1000306AE /* Ass1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B534627D2B618AB1000306AE /* Ass1.swift */; };
+		B53462842B619AC7000306AE /* Lab06.swift in Sources */ = {isa = PBXBuildFile; fileRef = B534627F2B619AC7000306AE /* Lab06.swift */; };
+		B53462852B619AC7000306AE /* Lab04.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53462802B619AC7000306AE /* Lab04.swift */; };
+		B53462862B619AC7000306AE /* Lab05.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53462812B619AC7000306AE /* Lab05.swift */; };
+		B53462872B619AC7000306AE /* Lab07.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53462822B619AC7000306AE /* Lab07.swift */; };
+		B53462882B619AC7000306AE /* Lab08.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53462832B619AC7000306AE /* Lab08.swift */; };
 		B56BB6CA2B57307700FA0708 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56BB6C92B57307700FA0708 /* ContentView.swift */; };
 		B56BB6CC2B57307800FA0708 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B56BB6CB2B57307800FA0708 /* Assets.xcassets */; };
 		B56BB6CF2B57307800FA0708 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B56BB6CE2B57307800FA0708 /* Preview Assets.xcassets */; };
@@ -35,6 +41,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B534627D2B618AB1000306AE /* Ass1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ass1.swift; sourceTree = "<group>"; };
+		B534627F2B619AC7000306AE /* Lab06.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lab06.swift; sourceTree = "<group>"; };
+		B53462802B619AC7000306AE /* Lab04.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lab04.swift; sourceTree = "<group>"; };
+		B53462812B619AC7000306AE /* Lab05.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lab05.swift; sourceTree = "<group>"; };
+		B53462822B619AC7000306AE /* Lab07.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lab07.swift; sourceTree = "<group>"; };
+		B53462832B619AC7000306AE /* Lab08.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lab08.swift; sourceTree = "<group>"; };
 		B56BB6C42B57307700FA0708 /* Lab2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lab2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56BB6C92B57307700FA0708 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B56BB6CB2B57307800FA0708 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -100,8 +112,14 @@
 				B56BB6F12B5730E000FA0708 /* Lab02.swift */,
 				B56BB6F72B57328A00FA0708 /* Lab03.swift */,
 				B56BB6C92B57307700FA0708 /* ContentView.swift */,
+				B53462802B619AC7000306AE /* Lab04.swift */,
+				B53462812B619AC7000306AE /* Lab05.swift */,
+				B534627F2B619AC7000306AE /* Lab06.swift */,
+				B53462822B619AC7000306AE /* Lab07.swift */,
+				B53462832B619AC7000306AE /* Lab08.swift */,
 				B56BB6CB2B57307800FA0708 /* Assets.xcassets */,
 				B56BB6CD2B57307800FA0708 /* Preview Content */,
+				B534627D2B618AB1000306AE /* Ass1.swift */,
 			);
 			path = Lab2;
 			sourceTree = "<group>";
@@ -245,11 +263,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B53462842B619AC7000306AE /* Lab06.swift in Sources */,
+				B53462852B619AC7000306AE /* Lab04.swift in Sources */,
 				B56BB6F82B57328A00FA0708 /* Lab03.swift in Sources */,
 				B56BB6CA2B57307700FA0708 /* ContentView.swift in Sources */,
+				B53462872B619AC7000306AE /* Lab07.swift in Sources */,
 				B56BB6F62B5731FA00FA0708 /* C8051LabsApp.swift in Sources */,
 				B56BB6F22B5730E000FA0708 /* Lab02.swift in Sources */,
 				B56BB6F42B57310100FA0708 /* Lab01.swift in Sources */,
+				B534627E2B618AB1000306AE /* Ass1.swift in Sources */,
+				B53462882B619AC7000306AE /* Lab08.swift in Sources */,
+				B53462862B619AC7000306AE /* Lab05.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
