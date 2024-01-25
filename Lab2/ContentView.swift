@@ -16,11 +16,11 @@ struct ContentView: View {
     @State var rotationOffset = CGSize.zero
     
     var body: some View {
-        GeometryReader{ geometry in
-            NavigationStack {
-                List {
-                    NavigationLink{
-                        let scene = DraggableRotatingCube()
+        NavigationStack {
+            List {
+                NavigationLink{
+                    @ObservedObject var scene = DraggableRotatingCube()
+                    ZStack{
                         SceneView(scene: scene, pointOfView: scene.cameraNode)
                             .ignoresSafeArea()
                             .onTapGesture(count: 2) {
@@ -39,64 +39,64 @@ struct ContentView: View {
                                 MagnifyGesture().sequenced(
                                     before: DragGesture().onChanged{ value in
                                         scene.handleDoubleDrag(value.translation)
-                                })
+                                    })
                             )
-                    } label: { Text("Assignment 1") }
-                    NavigationLink{
-                        let scene = RedSquare()
-                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-                            .ignoresSafeArea()
-                    } label: { Text("Lab 1: Red square") }
-                    NavigationLink{
-                        let scene = RotatingColouredCube()
-                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-                            .ignoresSafeArea()
-                            .onTapGesture(count: 2) {
-                                scene.handleDoubleTap()
+                        VStack{
+                            
+                            Button(action: {
+                                scene.resetCube()
+                            }){
+                                Text("Button").font(.system(size: 50))
+                            }.buttonStyle(.bordered)
+                            Group{
+                                
+                                Text(scene.positionText)
+                                    .foregroundStyle(.red)
+                                Text(scene.rotationText)
+                                    .foregroundStyle(.red)
                             }
-                    } label: { Text("Lab 2: Rotating cube") }
-                    NavigationLink{
-                        let scene = RotatingCrate()
-                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-                            .ignoresSafeArea()
-                            .onTapGesture(count: 2) {
-                                scene.handleDoubleTap()
-                            }
-                    } label: { Text("Lab 3: Textured cube") }
-                    NavigationLink{
-                        let scene = ControlableRotatingCrate()
-                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-                            .ignoresSafeArea()
-                            .onTapGesture(count: 2) {
-                                scene.handleDoubleTap()
-                            }
-                            .gesture(
-                                DragGesture()
-                                    .onChanged{ gesture in
-                                        scene.handleDrag(offset: gesture.translation)
-                                    }
-                            )
-                    } label: { Text("Lab 4: Rotatable cube") }
-                    NavigationLink{
-                        let scene = ControlableRotatingCrate()
-                        ZStack {
-                            SceneView(scene: scene, pointOfView: scene.cameraNode)
-                                .ignoresSafeArea()
-                                .onTapGesture(count: 2) {
-                                    scene.handleDoubleTap()
-                                }
-                                .gesture(
-                                    DragGesture()
-                                        .onChanged{ gesture in
-                                            scene.handleDrag(offset: gesture.translation)
-                                        }
-                                )
-                            Text("Hello World")
-                                .foregroundStyle(.white)
                         }
-                    } label: { Text("Lab 5: Text examples") }
-                    NavigationLink{
-                        let scene = RotatingCrateLight()
+                        
+                    }
+                } label: { Text("Assignment 1") }
+                NavigationLink{
+                    let scene = RedSquare()
+                    SceneView(scene: scene, pointOfView: scene.cameraNode)
+                        .ignoresSafeArea()
+                } label: { Text("Lab 1: Red square") }
+                NavigationLink{
+                    let scene = RotatingColouredCube()
+                    SceneView(scene: scene, pointOfView: scene.cameraNode)
+                        .ignoresSafeArea()
+                        .onTapGesture(count: 2) {
+                            scene.handleDoubleTap()
+                        }
+                } label: { Text("Lab 2: Rotating cube") }
+                NavigationLink{
+                    let scene = RotatingCrate()
+                    SceneView(scene: scene, pointOfView: scene.cameraNode)
+                        .ignoresSafeArea()
+                        .onTapGesture(count: 2) {
+                            scene.handleDoubleTap()
+                        }
+                } label: { Text("Lab 3: Textured cube") }
+                NavigationLink{
+                    let scene = ControlableRotatingCrate()
+                    SceneView(scene: scene, pointOfView: scene.cameraNode)
+                        .ignoresSafeArea()
+                        .onTapGesture(count: 2) {
+                            scene.handleDoubleTap()
+                        }
+                        .gesture(
+                            DragGesture()
+                                .onChanged{ gesture in
+                                    scene.handleDrag(offset: gesture.translation)
+                                }
+                        )
+                } label: { Text("Lab 4: Rotatable cube") }
+                NavigationLink{
+                    let scene = ControlableRotatingCrateWithText()
+                    ZStack {
                         SceneView(scene: scene, pointOfView: scene.cameraNode)
                             .ignoresSafeArea()
                             .onTapGesture(count: 2) {
@@ -108,39 +108,56 @@ struct ContentView: View {
                                         scene.handleDrag(offset: gesture.translation)
                                     }
                             )
-                    } label: { Text("Lab 6: Diffuse lighting") }
-                    NavigationLink{
-                        let scene = RotatingCrateFlashlight()
-                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-                            .ignoresSafeArea()
-                            .onTapGesture(count: 2) {
-                                scene.handleDoubleTap()
-                            }
-                            .gesture(
-                                DragGesture()
-                                    .onChanged{ gesture in
-                                        scene.handleDrag(offset: gesture.translation)
-                                    }
-                            )
-                    } label: { Text("Lab 7: Spotlight (flashlight)") }
-                    NavigationLink{
-                        let scene = RotatingCrateFog()
-                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-                            .ignoresSafeArea()
-                            .onTapGesture(count: 2) {
-                                scene.handleDoubleTap()
-                            }
-                            .gesture(
-                                DragGesture()
-                                    .onChanged{ gesture in
-                                        scene.handleDrag(offset: gesture.translation)
-                                    }
-                            )
-                    } label: { Text("Lab 8: Fog") }
-                }.navigationTitle("COMP8051")
-            }
+                        Text("Hello World")
+                            .foregroundStyle(.white)
+                    }
+                } label: { Text("Lab 5: Text examples") }
+                NavigationLink{
+                    let scene = RotatingCrateLight()
+                    SceneView(scene: scene, pointOfView: scene.cameraNode)
+                        .ignoresSafeArea()
+                        .onTapGesture(count: 2) {
+                            scene.handleDoubleTap()
+                        }
+                        .gesture(
+                            DragGesture()
+                                .onChanged{ gesture in
+                                    scene.handleDrag(offset: gesture.translation)
+                                }
+                        )
+                } label: { Text("Lab 6: Diffuse lighting") }
+                NavigationLink{
+                    let scene = RotatingCrateFlashlight()
+                    SceneView(scene: scene, pointOfView: scene.cameraNode)
+                        .ignoresSafeArea()
+                        .onTapGesture(count: 2) {
+                            scene.handleDoubleTap()
+                        }
+                        .gesture(
+                            DragGesture()
+                                .onChanged{ gesture in
+                                    scene.handleDrag(offset: gesture.translation)
+                                }
+                        )
+                } label: { Text("Lab 7: Spotlight (flashlight)") }
+                NavigationLink{
+                    let scene = RotatingCrateFog()
+                    SceneView(scene: scene, pointOfView: scene.cameraNode)
+                        .ignoresSafeArea()
+                        .onTapGesture(count: 2) {
+                            scene.handleDoubleTap()
+                        }
+                        .gesture(
+                            DragGesture()
+                                .onChanged{ gesture in
+                                    scene.handleDrag(offset: gesture.translation)
+                                }
+                        )
+                } label: { Text("Lab 8: Fog") }
+            }.navigationTitle("COMP8051")
         }
     }
+    
 }
 
 #Preview {

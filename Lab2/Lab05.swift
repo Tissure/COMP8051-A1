@@ -58,8 +58,11 @@ class ControlableRotatingCrateWithText: SCNScene {
     // Create 3D Text
     func addText() {
         let theText = SCNText(string: "Hello!", extrusionDepth: 1.0)
+        theText.font = UIFont(name:"Helvetica", size: 0.15)
+        theText.firstMaterial!.diffuse.contents = UIColor.red
+        
         let theTextNode = SCNNode(geometry: theText)
-        theTextNode.position = SCNVector3(x: 0, y: 0, z: 0)
+        theTextNode.position = SCNVector3(x: 1, y: 1, z: 1)
         rootNode.addChildNode(theTextNode) // Add the text object to the scene
     }
 

@@ -1,15 +1,11 @@
 //====================================================================
 //
-// (c) Borna Noureddin
-// COMP 8051   British Columbia Institute of Technology
-// Lab02: Make an auto-rotating cube with different colours on each side
-//
 //[DONE] Create an app that runs on an iOS device (you can assume at least iOS 14.0) with a single cube shown in perspective projection. Each side of the cube should have a separate colour, as shown in class.
 //[DONE] Modify the app so a double-tap toggles whether the cube continuously rotates about the y-axis.
 //[DONE] Modify the app so when the cube is not rotating the user can rotate the cube about two axes using the touch interface (single finger drag).
 //[DONE] Modify the app so when the cube is not rotating a “pinch” (two fingers moving closer or farther away from each other) zooms in and out of the cube.
 //[] Modify the app so when the cube is not rotating dragging with two fingers moves the cube around.
-//[] Add to the app a button that, when pressed, resets the cube to a default position of (0,0,0) with a default orientation.
+//[DONE] Add to the app a button that, when pressed, resets the cube to a default position of (0,0,0) with a default orientation.
 //[] Add to the app a label that continuously reports the position (x,y,z) and rotation (3 angles) of the cube.
 //[] Add a second cube with a separate texture applied to each side, spaced far enough from the first one so the two are fully visible and close enough that both are in the camera's view. This second cube should continuously rotate, even when the first one is not auto-rotating.
 //[] Add a flashlight, ambient and diffuse light, and include toggle buttons to turn each one on and off. The effects of each of the three lights should be clearly visible.
@@ -19,7 +15,9 @@
 import SwiftUI
 import SceneKit
 
-class DraggableRotatingCube: SCNScene {
+public class DraggableRotatingCube: SCNScene, ObservableObject {
+    @Published var positionText:String = "a"
+    @Published var rotationText:String = "a"
     var rot = CGSize.zero
     var rotAngle = CGSize.zero
     var rotationSpeed = 0.01
@@ -28,6 +26,8 @@ class DraggableRotatingCube: SCNScene {
     var isRotating = true // Keep track of if rotation is toggled
     var isFreeCam = false // Keep track of if free cam is toggled
     var cameraNode = SCNNode() // Initialize camera node
+    
+    var initCubeTransform:SCNMatrix4 = SCNMatrix4Identity
     
     // Catch if initializer in init() fails
     required init?(coder aDecoder: NSCoder) {
@@ -45,6 +45,8 @@ class DraggableRotatingCube: SCNScene {
         Task(priority: .userInitiated) {
             await firstUpdate()
         }
+    
+        
     }
     
     // Function to setup the camera node
@@ -93,6 +95,14 @@ class DraggableRotatingCube: SCNScene {
         
         theCube.position = SCNVector3(0, 0, 0) // Put the cube at position (0, 0, 0)
         rootNode.addChildNode(theCube) // Add the cube node to the scene
+        initCubeTransform = theCube.transform
+    }
+    
+    @MainActor
+    func resetCube(){
+        translation = CGSize(width:1,height:1)
+        rotAngle = CGSize.zero
+        scale = SCNVector3(1,1,1)
     }
     
     @MainActor
@@ -106,16 +116,26 @@ class DraggableRotatingCube: SCNScene {
         if(isRotating){
             rot.width += 0.05
         }else{
+            theCube?.position = SCNVector3(translation.width, translation.height, 1)
             rot = rotAngle
             theCube?.scale = scale
-            theCube?.position = SCNVector3(translation.width, translation.height, 1)
         }
         theCube?.eulerAngles = SCNVector3(rot.height * rotationSpeed, rot.width * rotationSpeed, 0)
+        
+//        updateText(pos: theCube?.position, rot: theCube?.eulerAngles)
+        
+        positionText = "\(String(describing: theCube?.position))"
+        rotationText = "\(String(describing: theCube?.eulerAngles))"
+        self.objectWillChange.send()
         
         // Repeat increment of rotation every 10000 nanoseconds
         Task { try! await Task.sleep(nanoseconds: 10000)
             reanimate()
         }
+    }
+    
+    func updateText(pos:SCNVector3?, rot:SCNVector3?){
+        
     }
     
     @MainActor
