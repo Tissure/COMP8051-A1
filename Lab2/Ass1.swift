@@ -27,6 +27,9 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     var isRotating = true // Keep track of if rotation is toggled
     var isFreeCam = false // Keep track of if free cam is toggled
     var cameraNode = SCNNode() // Initialize camera node
+    var diffuseLightPos = SCNVector4(0, 0, 0, Double.pi/2) // Keep track of flashlight position
+    var flashlightPos = 3.0
+    var flashlightAngle = 10.0
     
     var initCubeTransform:SCNMatrix4 = SCNMatrix4Identity
     
@@ -44,10 +47,14 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         setupCamera()
         addCube()
         addSecondCube()
+        setupDudLight() // Disable Default lighting
+        setupAmbientLight()
+        setupDirectionalLight()
+        setupFlashlight()
+        
         Task(priority: .userInitiated) {
             await firstUpdate()
         }
-        
         
     }
     
@@ -99,6 +106,60 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         }
     }
     
+    // Sets up a dud light
+    func setupDudLight() {
+        let dudLight = SCNNode() // Create a SCNNode for the lamp
+        dudLight.light = SCNLight() // Add a new light to the lamp
+        dudLight.light!.type = .directional // Set the light type to ambient
+        dudLight.light!.color = UIColor.white // Set the light color to white
+        dudLight.light!.intensity = 0 // Set the light intensity to 5000 lumins (1000 is default)
+        rootNode.addChildNode(dudLight) // Add the lamp node to the scene
+    }
+    
+    // Sets up an ambient light (all around)
+    func setupAmbientLight() {
+        let ambientLight = SCNNode() // Create a SCNNode for the lamp
+        ambientLight.name = "Ambient Light"
+        ambientLight.light = SCNLight() // Add a new light to the lamp
+        ambientLight.light!.type = .ambient // Set the light type to ambient
+        ambientLight.light!.color = UIColor.white // Set the light color to white
+        ambientLight.light!.intensity = 5000 // Set the light intensity to 5000 lumins (1000 is default)
+        rootNode.addChildNode(ambientLight) // Add the lamp node to the scene
+    }
+    
+    // Sets up a directional light (flashlight)
+    func setupDirectionalLight() {
+        let directionalLight = SCNNode() // Create a SCNNode for the lamp
+        directionalLight.name = "Directional Light" // Name the node so we can reference it later
+        directionalLight.light = SCNLight() // Add a new light to the lamp
+        directionalLight.light!.type = .directional // Set the light type to directional
+        directionalLight.light!.color = UIColor.green // Set the light color to white
+        directionalLight.light!.intensity = 20000 // Set the light intensity to 20000 lumins (1000 is default)
+        directionalLight.rotation = diffuseLightPos // Set the rotation of the light from the flashlight to the flashlight position variable
+        rootNode.addChildNode(directionalLight) // Add the lamp node to the scene
+    }
+    
+    // Sets up a directional light (flashlight)
+    func setupFlashlight() {
+        let lightNode = SCNNode()
+        lightNode.name = "Flashlight"
+        lightNode.light = SCNLight()
+        lightNode.light!.type = SCNLight.LightType.spot
+        lightNode.light!.castsShadow = true
+        lightNode.light!.color = UIColor.red
+        lightNode.light!.intensity = 5000
+        lightNode.position = SCNVector3(0, 5, flashlightPos)
+        lightNode.rotation = SCNVector4(1, 0, 0, -Double.pi/3)
+        lightNode.light!.spotInnerAngle = 0
+        lightNode.light!.spotOuterAngle = flashlightAngle
+        lightNode.light!.shadowColor = UIColor.black
+        lightNode.light!.zFar = 500
+        lightNode.light!.zNear = 50
+        rootNode.addChildNode(lightNode)
+    }
+    
+    
+    
     @MainActor
     func resetCube(){
         translation = CGSize(width:1,height:1)
@@ -124,6 +185,13 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         positionText = "\(String(describing: theCube?.position))"
         rotationText = "\(String(describing: theCube?.eulerAngles))"
         self.objectWillChange.send()
+        
+        let directionalLight = rootNode.childNode(withName: "Directional Light", recursively: true) // Get the cube object by its name (See line 56)
+        directionalLight?.rotation = diffuseLightPos
+        
+        let flashLight = rootNode.childNode(withName: "Flashlight", recursively: true)
+        flashLight?.position = SCNVector3(0, 5, flashlightPos)
+        flashLight?.light!.spotOuterAngle = flashlightAngle
         
         // Repeat increment of rotation every 10000 nanoseconds
         Task { try! await Task.sleep(nanoseconds: 10000)
@@ -163,6 +231,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     @MainActor
     func handleDrag(_ offset: CGSize){
         rotAngle = offset
+        diffuseLightPos = SCNVector4(offset.height, offset.width, 0, Double.pi/2)
     }
     
     @MainActor
@@ -177,8 +246,23 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     }
     
     @MainActor
-    func toggleFlashLight(_ id:Int){
-        print(id)
+    func toggleLights(_ id:Int){
+        let ambientLight = rootNode.childNode(withName: "Ambient Light", recursively: true)
+        let directionalLight = rootNode.childNode(withName: "Directional Light", recursively: true)
+        let flashLight = rootNode.childNode(withName: "Flashlight", recursively: true)
+        
+        switch id{
+        case 1:
+            ambientLight?.isHidden = !(ambientLight?.isHidden ?? true)
+            break
+        case 2:
+            directionalLight?.isHidden = !(directionalLight?.isHidden ?? true)
+            break
+        case 3:
+            flashLight?.isHidden = !(flashLight?.isHidden ?? true)
+            break
+        default: break
+        }
     }
 }
 

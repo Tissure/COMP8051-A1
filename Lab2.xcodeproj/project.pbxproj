@@ -58,6 +58,7 @@
 		B56BB6F52B5731FA00FA0708 /* C8051LabsApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8051LabsApp.swift; sourceTree = "<group>"; };
 		B56BB6F72B57328A00FA0708 /* Lab03.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lab03.swift; sourceTree = "<group>"; };
 		B56BB6F92B5732CB00FA0708 /* crate.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crate.jpg; sourceTree = "<group>"; };
+		B5D1BC122B6346E30067BB64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +107,7 @@
 		B56BB6C62B57307700FA0708 /* Lab2 */ = {
 			isa = PBXGroup;
 			children = (
+				B5D1BC122B6346E30067BB64 /* Info.plist */,
 				B56BB6F92B5732CB00FA0708 /* crate.jpg */,
 				B56BB6F52B5731FA00FA0708 /* C8051LabsApp.swift */,
 				B56BB6F32B57310100FA0708 /* Lab01.swift */,

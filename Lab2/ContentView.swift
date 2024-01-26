@@ -43,7 +43,6 @@ struct ContentView: View {
                                         })
                                 )
                             
-                            
                             Group{
                                 Text(scene.positionText)
                                     .foregroundStyle(.red).font(.system(size: 20))
@@ -52,17 +51,17 @@ struct ContentView: View {
                             }
                             HStack{
                                 Button(action: {
-                                    scene.toggleFlashLight(1)
+                                    scene.toggleLights(1)
                                 }){
                                     Text("1").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
                                 Button(action: {
-                                    scene.toggleFlashLight(2)
+                                    scene.toggleLights(2)
                                 }){
                                     Text("2").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
                                 Button(action: {
-                                    scene.toggleFlashLight(3)
+                                    scene.toggleLights(3)
                                 }){
                                     Text("3").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
