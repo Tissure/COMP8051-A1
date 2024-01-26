@@ -21,39 +21,56 @@ struct ContentView: View {
                 NavigationLink{
                     @ObservedObject var scene = DraggableRotatingCube()
                     ZStack{
-                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-                            .ignoresSafeArea()
-                            .onTapGesture(count: 2) {
-                                scene.handleDoubleTap()
-                            }.gesture(
-                                DragGesture().onChanged{ value in
-                                    scene.handleDrag(value.translation)
-                                }
-                            )
-                            .gesture(
-                                MagnifyGesture().onChanged{value in
-                                    scene.handlePinch(value.magnification)
-                                }
-                            )
-                            .gesture(
-                                MagnifyGesture().sequenced(
-                                    before: DragGesture().onChanged{ value in
-                                        scene.handleDoubleDrag(value.translation)
-                                    })
-                            )
                         VStack{
+                            SceneView(scene: scene, pointOfView: scene.cameraNode)
+                                .ignoresSafeArea()
+                                .onTapGesture(count: 2) {
+                                    scene.handleDoubleTap()
+                                }.gesture(
+                                    DragGesture().onChanged{ value in
+                                        scene.handleDrag(value.translation)
+                                    }
+                                )
+                                .gesture(
+                                    MagnifyGesture().onChanged{value in
+                                        scene.handlePinch(value.magnification)
+                                    }
+                                )
+                                .gesture(
+                                    MagnifyGesture().sequenced(
+                                        before: DragGesture().onChanged{ value in
+                                            scene.handleDoubleDrag(value.translation)
+                                        })
+                                )
                             
-                            Button(action: {
-                                scene.resetCube()
-                            }){
-                                Text("Button").font(.system(size: 50))
-                            }.buttonStyle(.bordered)
+                            
                             Group{
-                                
                                 Text(scene.positionText)
-                                    .foregroundStyle(.red)
+                                    .foregroundStyle(.red).font(.system(size: 20))
                                 Text(scene.rotationText)
-                                    .foregroundStyle(.red)
+                                    .foregroundStyle(.red).font(.system(size: 20))
+                            }
+                            HStack{
+                                Button(action: {
+                                    scene.toggleFlashLight(1)
+                                }){
+                                    Text("1").font(.system(size: 24))
+                                }.buttonStyle(.bordered)
+                                Button(action: {
+                                    scene.toggleFlashLight(2)
+                                }){
+                                    Text("2").font(.system(size: 24))
+                                }.buttonStyle(.bordered)
+                                Button(action: {
+                                    scene.toggleFlashLight(3)
+                                }){
+                                    Text("3").font(.system(size: 24))
+                                }.buttonStyle(.bordered)
+                                Button(action: {
+                                    scene.resetCube()
+                                }){
+                                    Text("Reset Cube").font(.system(size: 24))
+                                }.buttonStyle(.bordered)
                             }
                         }
                         
