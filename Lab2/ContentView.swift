@@ -13,63 +13,62 @@ import SceneKit
 import SpriteKit
 
 struct ContentView: View {
-    @State var rotationOffset = CGSize.zero
-    
+    @ObservedObject var mainScene = DraggableRotatingCube()
     var body: some View {
         NavigationStack {
             List {
                 NavigationLink{
-                    @ObservedObject var scene = DraggableRotatingCube()
+
                     ZStack{
                         VStack{
-                            SceneView(scene: scene, pointOfView: scene.cameraNode)
+                            SceneView(scene: mainScene, pointOfView: mainScene.cameraNode)
                                 .ignoresSafeArea()
                                 .onTapGesture(count: 2) {
-                                    scene.handleDoubleTap()
+                                    mainScene.handleDoubleTap()
                                 }.gesture(
                                     DragGesture().onChanged{ value in
-                                        scene.handleDrag(value.translation)
+                                        mainScene.handleDrag(value.translation)
                                     }
                                 )
                                 .gesture(
                                     MagnifyGesture()
                                         .onChanged{value in
-                                            scene.handlePinch(value.magnification)
+                                            mainScene.handlePinch(value.magnification)
                                             
                                         })
                                 .gesture(
                                     DragGesture().simultaneously(
                                         with: MagnifyGesture())
                                         .onChanged{value in
-                                            scene.handleDoubleDrag(value.first?.translation  ?? CGSize.zero)
+                                            mainScene.handleDoubleDrag(value.first?.translation  ?? CGSize.zero)
                                             
                                         }
                                 )
                                                             
                             Group{
-                                Text(scene.positionText)
+                                Text(mainScene.positionText)
                                     .foregroundStyle(.red).font(.system(size: 20))
-                                Text(scene.rotationText)
+                                Text(mainScene.rotationText)
                                     .foregroundStyle(.red).font(.system(size: 20))
                             }
                             HStack{
                                 Button(action: {
-                                    scene.toggleLights(1)
+                                    mainScene.toggleLights(1)
                                 }){
                                     Text("1").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
                                 Button(action: {
-                                    scene.toggleLights(2)
+                                    mainScene.toggleLights(2)
                                 }){
                                     Text("2").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
                                 Button(action: {
-                                    scene.toggleLights(3)
+                                    mainScene.toggleLights(3)
                                 }){
                                     Text("3").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
                                 Button(action: {
-                                    scene.resetCube()
+                                    mainScene.resetCube()
                                 }){
                                     Text("Reset Cube").font(.system(size: 24))
                                 }.buttonStyle(.bordered)

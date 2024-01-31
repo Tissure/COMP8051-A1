@@ -183,8 +183,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         animateOtherCube(theOtherCube)
         //        updateText(pos: theCube?.position, rot: theCube?.eulerAngles)
-        positionText = "\(String(describing: theCube?.position))"
-        rotationText = "\(String(describing: theCube?.eulerAngles))"
+
         self.objectWillChange.send()
         
         let directionalLight = rootNode.childNode(withName: "Directional Light", recursively: true) // Get the cube object by its name (See line 56)
@@ -193,6 +192,13 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         let flashLight = rootNode.childNode(withName: "Flashlight", recursively: true)
         flashLight?.position = SCNVector3(0, 5, flashlightPos)
         flashLight?.light!.spotOuterAngle = flashlightAngle
+        
+        DispatchQueue.main.async{
+            let pos = theCube!.position
+            let rot = theCube!.eulerAngles
+            self.positionText = "\(pos.x), \(pos.y), \(pos.z)"
+            self.rotationText = "\(rot.x), \(rot.y), \(rot.z)"
+        }
         
         // Repeat increment of rotation every 10000 nanoseconds
         Task { try! await Task.sleep(nanoseconds: 10000)
@@ -203,7 +209,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     @MainActor
     func animateCube(_ theCube: SCNNode?){
         if(isRotating){
-            rot1.width += 0.05
+            rot1.width += 0.5
         }else{
             theCube?.position = SCNVector3(translation.width / 50, translation.height / 50, 0)
             rot1 = rotAngle
@@ -215,7 +221,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     @MainActor
     func animateOtherCube(_ theCube: SCNNode?){
         
-        rot2.width += 0.05
+        rot2.width += 0.5
         theCube?.eulerAngles = SCNVector3(rot2.height * rotationSpeed, rot2.width * rotationSpeed, 0)
     }
     
