@@ -73,7 +73,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         let materials = [UIColor.red, UIColor.green, UIColor.blue, UIColor.yellow, UIColor.cyan, UIColor.magenta] // List of materials for each side
         assignMaterials(theCube: theCube, materials: materials)
         
-        theCube.position = SCNVector3(0, 0, 0) // Put the cube at position (0, 0, 0)
+        theCube.position = SCNVector3(0,0,0) // Put the cube at position (0, 0, 0)
         rootNode.addChildNode(theCube) // Add the cube node to the scene
         initCubeTransform = theCube.transform
     }
@@ -123,7 +123,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         ambientLight.light = SCNLight() // Add a new light to the lamp
         ambientLight.light!.type = .ambient // Set the light type to ambient
         ambientLight.light!.color = UIColor.white // Set the light color to white
-        ambientLight.light!.intensity = 5000 // Set the light intensity to 5000 lumins (1000 is default)
+        ambientLight.light!.intensity = 500 // Set the light intensity to 5000 lumins (1000 is default)
         rootNode.addChildNode(ambientLight) // Add the lamp node to the scene
     }
     
@@ -150,7 +150,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         lightNode.light!.intensity = 5000
         lightNode.position = SCNVector3(0, 5, flashlightPos)
         lightNode.rotation = SCNVector4(1, 0, 0, -Double.pi/3)
-        lightNode.light!.spotInnerAngle = 0
+        lightNode.light!.spotInnerAngle = 10
         lightNode.light!.spotOuterAngle = flashlightAngle
         lightNode.light!.shadowColor = UIColor.black
         lightNode.light!.zFar = 500
@@ -165,6 +165,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         translation = CGSize(width:1,height:1)
         rotAngle = CGSize.zero
         scale = SCNVector3(1,1,1)
+        cameraNode.camera?.fieldOfView = 60
     }
     
     @MainActor
@@ -204,7 +205,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         if(isRotating){
             rot1.width += 0.05
         }else{
-            theCube?.position = SCNVector3(translation.width, translation.height, 1)
+            theCube?.position = SCNVector3(translation.width / 50, translation.height / 50, 0)
             rot1 = rotAngle
             theCube?.scale = scale
         }
@@ -236,6 +237,8 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     
     @MainActor
     func handlePinch(_ magnification:CGFloat){
+        //        let fov = magnification * 100
+        //        cameraNode.camera?.fieldOfView = (fov > 0 ) ? fov : fov * -1
         scale = SCNVector3(magnification, magnification, magnification)
     }
     
@@ -265,4 +268,3 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         }
     }
 }
-

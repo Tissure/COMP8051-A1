@@ -32,17 +32,20 @@ struct ContentView: View {
                                     }
                                 )
                                 .gesture(
-                                    MagnifyGesture().onChanged{value in
-                                        scene.handlePinch(value.magnification)
-                                    }
-                                )
-                                .gesture(
-                                    MagnifyGesture().sequenced(
-                                        before: DragGesture().onChanged{ value in
-                                            scene.handleDoubleDrag(value.translation)
+                                    MagnifyGesture()
+                                        .onChanged{value in
+                                            scene.handlePinch(value.magnification)
+                                            
                                         })
+                                .gesture(
+                                    DragGesture().simultaneously(
+                                        with: MagnifyGesture())
+                                        .onChanged{value in
+                                            scene.handleDoubleDrag(value.first?.translation  ?? CGSize.zero)
+                                            
+                                        }
                                 )
-                            
+                                                            
                             Group{
                                 Text(scene.positionText)
                                     .foregroundStyle(.red).font(.system(size: 20))
