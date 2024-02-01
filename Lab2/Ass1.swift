@@ -18,12 +18,12 @@ import SceneKit
 struct CubeInstance {
     var rot = CGSize.zero
     var cube:SCNNode =  SCNNode()
+    var initPos:SCNVector3 = SCNVector3Zero
 }
 
 
 public class DraggableRotatingCube: SCNScene, ObservableObject {
     @Published var positionText:String = "a"
-//    @Published var rotationText:String = "a"
     
     var TheCube:CubeInstance = CubeInstance()
     var TheOtherCube:CubeInstance = CubeInstance()
@@ -31,6 +31,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     var rotAngle = CGSize.zero
     var rotationSpeed = 0.05
     let dragSpeed = 0.0005
+    let panSpeed = 0.01
     var scale = SCNVector3(1,1,1)
     var translation = CGPoint.zero
     var isRotating = true // Keep track of if rotation is toggled
@@ -55,7 +56,6 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         addCube()
         addSecondCube()
         setupLighting()
-
         
         Task(priority: .userInitiated) {
             await firstUpdate()
@@ -74,8 +74,8 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     func setupCamera() {
         let camera = SCNCamera() // Create Camera object
         cameraNode.camera = camera // Give the cameraNode a camera
-        cameraNode.position = SCNVector3(5, 5, 5) // Set the position to (0, 0, 2)
-        cameraNode.eulerAngles = SCNVector3(-Float.pi/4, Float.pi/4, 0) // Set the pitch, yaw, and roll to 0
+        cameraNode.position = SCNVector3(0,1,15) // Set the position to (0, 0, 2)
+        cameraNode.eulerAngles = SCNVector3(-Float.pi/16, 0, 0) // Set the pitch, yaw, and roll to 0
         rootNode.addChildNode(cameraNode) // Add the cameraNode to the scene
     }
     
@@ -88,6 +88,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         theCube.position = SCNVector3(0,0,0) // Put the cube at position (0, 0, 0)
         rootNode.addChildNode(theCube) // Add the cube node to the scene
         
+        self.TheCube.initPos = theCube.position
         self.TheCube.cube = theCube
     }
     
@@ -102,7 +103,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
                          UIImage(named: "CubeTextures/cube6.jpg")] // List of materials for each side
         assignMaterials(theCube:theCube, materials:materials)
         
-        theCube.position = SCNVector3(0, -5, 0) // Put the cube at position (0, 0, 0)
+        theCube.position = SCNVector3(0, -2, 0) // Put the cube at position (0, 0, 0)
         rootNode.addChildNode(theCube) // Add the cube node to the scene
         
         self.TheOtherCube.cube = theCube
@@ -110,8 +111,6 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     
     func assignMaterials(theCube:SCNNode, materials:[NSObject?]){
         theCube.geometry?.firstMaterial?.diffuse.contents = materials[0] // Diffuse the red colour material across the whole cube
-        //Note: At this point, the cube is completely red. Try commenting lines 45-69 and running to see it!
-        /// Comment **v
         var nextMaterial: SCNMaterial // Initialize temporary variable to store each texture
         for i in 1..<materials.count{
             nextMaterial = SCNMaterial() // Empty the variable
@@ -174,7 +173,8 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     
     @MainActor
     func resetCube(){
-        translation = CGPoint.zero
+        TheCube.cube.position = TheCube.initPos
+        translation = CGPoint(x: CGFloat(TheCube.initPos.x) / panSpeed, y: CGFloat(TheCube.initPos.y) / panSpeed)
         rotAngle = CGSize.zero
         scale = SCNVector3(1,1,1)
         cameraNode.camera?.fieldOfView = 60
@@ -182,6 +182,7 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     
     @MainActor
     func firstUpdate() {
+        resetCube()
         reanimate() // Call reanimate on the first graphics update frame
         updateUI()
     }
@@ -191,15 +192,6 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         animateCube()
         animateOtherCube()
-        
-//        let directionalLight = rootNode.childNode(withName: "Directional Light", recursively: true) // Get the cube object by its name (See line 56)
-//        directionalLight?.rotation = diffuseLightPos
-//        
-//        let flashLight = rootNode.childNode(withName: "Flashlight", recursively: true)
-//        flashLight?.position = SCNVector3(0, 5, flashlightPos)
-//        flashLight?.light!.spotOuterAngle = flashlightAngle
-        
-       
         // Repeat increment of rotation every 10000 nanoseconds
         Task { try! await Task.sleep(nanoseconds: 1000)
             reanimate()
@@ -211,7 +203,6 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         DispatchQueue.main.async{
             self.positionText = "\(self.TheCube.cube.position.x), \(self.TheCube.cube.position.y), \(self.TheCube.cube.position.z)"
-//            self.rotationText = "\(self.TheCube.cube.eulerAngles.x), \(self.TheCube.cube.eulerAngles.y), \(self.TheCube.cube.eulerAngles.z)"
         }
         // Repeat increment of rotation every 10000 nanoseconds
         Task { try! await Task.sleep(nanoseconds: 320000000)
@@ -224,13 +215,9 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         if(isRotating){
             self.TheCube.rot.width += rotationSpeed
-//            if(rot1.width > Double.pi * 2) {
-//                rot1.width = rot1.width.truncatingRemainder(dividingBy: Double.pi)
-//            }
             rotAngle = self.TheCube.rot
         }else{
-//            self.TheCube.cube.position = SCNVector3(translation.x / 50, translation.y / 50, 0)
-            self.TheCube.cube.position = SCNVector3(translation.x / 50, -translation.y / 50, 0)
+            self.TheCube.cube.position = SCNVector3(translation.x * panSpeed, translation.y * panSpeed, 0)
             self.TheCube.rot = rotAngle
             self.TheCube.cube.scale = scale
         }
@@ -239,12 +226,6 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     
     @MainActor
     func animateOtherCube(){
-//        if(rot2.width > Double.pi * 2) {
-//            rot2.width = 0
-//        }
-//        if(rot2.height > Double.pi * 2) {
-//            rot2.height = 0
-//        }
         self.TheOtherCube.rot.width += rotationSpeed
         self.TheOtherCube.rot.height += rotationSpeed
         self.TheOtherCube.cube.eulerAngles = SCNVector3(self.TheOtherCube.rot.height, self.TheOtherCube.rot.width, 0)
@@ -257,24 +238,20 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     
     @MainActor
     func handleDrag(_ offset: CGPoint){
-        print(offset)
+        if(isRotating){return}
         rotAngle = CGSize(width: rotAngle.width + offset.x * dragSpeed, height: rotAngle.height + offset.y * dragSpeed)
-        //diffuseLightPos = SCNVector4(offset.height, offset.width, 0, Double.pi/2)
     }
     
     @MainActor
     func handlePinch(_ magnification:CGFloat){
-        //        let fov = magnification * 100
-        //        cameraNode.camera?.fieldOfView = (fov > 0 ) ? fov : fov * -1
+        if(isRotating){return}
         scale = SCNVector3(magnification, magnification, magnification)
     }
     
     @MainActor
     func handleDoubleDrag(_ offset:CGPoint){
         if(isRotating){return}
-
-        translation = offset
-        print(offset)
+        translation = CGPoint(x: translation.x + offset.x * panSpeed, y: translation.y - offset.y * panSpeed)
     }
     
     @MainActor

@@ -54,13 +54,13 @@ class CustomImageView: UIView, UIGestureRecognizerDelegate {
     }
     
     @objc func handleDrag(_ recognizer: UIPanGestureRecognizer){
-        let translation = recognizer.translation(in: self)
+        let velocity = recognizer.velocity(in: self)
         switch (recognizer.numberOfTouches) {
         case 1:
-            mainScene?.handleDrag(translation)
+            mainScene?.handleDrag(velocity)
             break
         case 2:
-            mainScene?.handleDoubleDrag(translation)
+            mainScene?.handleDoubleDrag(velocity)
             break
         default: break
             //
