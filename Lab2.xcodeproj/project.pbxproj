@@ -110,6 +110,7 @@
 				B5D1BC122B6346E30067BB64 /* Info.plist */,
 				B56BB6F92B5732CB00FA0708 /* crate.jpg */,
 				B56BB6F52B5731FA00FA0708 /* C8051LabsApp.swift */,
+				B534627D2B618AB1000306AE /* Ass1.swift */,
 				B56BB6F32B57310100FA0708 /* Lab01.swift */,
 				B56BB6F12B5730E000FA0708 /* Lab02.swift */,
 				B56BB6F72B57328A00FA0708 /* Lab03.swift */,
@@ -121,7 +122,6 @@
 				B53462832B619AC7000306AE /* Lab08.swift */,
 				B56BB6CB2B57307800FA0708 /* Assets.xcassets */,
 				B56BB6CD2B57307800FA0708 /* Preview Content */,
-				B534627D2B618AB1000306AE /* Ass1.swift */,
 			);
 			path = Lab2;
 			sourceTree = "<group>";

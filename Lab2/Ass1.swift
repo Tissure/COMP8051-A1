@@ -4,34 +4,41 @@
 //[DONE] Modify the app so a double-tap toggles whether the cube continuously rotates about the y-axis.
 //[DONE] Modify the app so when the cube is not rotating the user can rotate the cube about two axes using the touch interface (single finger drag).
 //[DONE] Modify the app so when the cube is not rotating a “pinch” (two fingers moving closer or farther away from each other) zooms in and out of the cube.
-//[] Modify the app so when the cube is not rotating dragging with two fingers moves the cube around.
+//[DONE] Modify the app so when the cube is not rotating dragging with two fingers moves the cube around.
 //[DONE] Add to the app a button that, when pressed, resets the cube to a default position of (0,0,0) with a default orientation.
-//[] Add to the app a label that continuously reports the position (x,y,z) and rotation (3 angles) of the cube.
+//[DONE] Add to the app a label that continuously reports the position (x,y,z) and rotation (3 angles) of the cube.
 //[DONE] Add a second cube with a separate texture applied to each side, spaced far enough from the first one so the two are fully visible and close enough that both are in the camera's view. This second cube should continuously rotate, even when the first one is not auto-rotating.
-//[] Add a flashlight, ambient and diffuse light, and include toggle buttons to turn each one on and off. The effects of each of the three lights should be clearly visible.
+//[DONE] Add a flashlight, ambient and diffuse light, and include toggle buttons to turn each one on and off. The effects of each of the three lights should be clearly visible.
 
 //====================================================================
 
 import SwiftUI
 import SceneKit
 
+struct CubeInstance {
+    var rot = CGSize.zero
+    var cube:SCNNode =  SCNNode()
+}
+
+
 public class DraggableRotatingCube: SCNScene, ObservableObject {
     @Published var positionText:String = "a"
-    @Published var rotationText:String = "a"
-    var rot1 = CGSize.zero
-    var rot2 = CGSize.zero
+//    @Published var rotationText:String = "a"
+    
+    var TheCube:CubeInstance = CubeInstance()
+    var TheOtherCube:CubeInstance = CubeInstance()
+    
     var rotAngle = CGSize.zero
-    var rotationSpeed = 0.01
+    var rotationSpeed = 0.05
+    let dragSpeed = 0.0005
     var scale = SCNVector3(1,1,1)
-    var translation = CGSize(width: 1, height: 1)
+    var translation = CGPoint.zero
     var isRotating = true // Keep track of if rotation is toggled
-    var isFreeCam = false // Keep track of if free cam is toggled
+    
     var cameraNode = SCNNode() // Initialize camera node
     var diffuseLightPos = SCNVector4(0, 0, 0, Double.pi/2) // Keep track of flashlight position
     var flashlightPos = 3.0
     var flashlightAngle = 10.0
-    
-    var initCubeTransform:SCNMatrix4 = SCNMatrix4Identity
     
     // Catch if initializer in init() fails
     required init?(coder aDecoder: NSCoder) {
@@ -47,15 +54,20 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         setupCamera()
         addCube()
         addSecondCube()
-        setupDudLight() // Disable Default lighting
-        setupAmbientLight()
-        setupDirectionalLight()
-        setupFlashlight()
+        setupLighting()
+
         
         Task(priority: .userInitiated) {
             await firstUpdate()
         }
         
+    }
+    
+    func setupLighting(){
+        setupDudLight() // Disable Default lighting
+        setupAmbientLight()
+        setupDirectionalLight()
+        setupFlashlight()
     }
     
     // Function to setup the camera node
@@ -75,7 +87,8 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         theCube.position = SCNVector3(0,0,0) // Put the cube at position (0, 0, 0)
         rootNode.addChildNode(theCube) // Add the cube node to the scene
-        initCubeTransform = theCube.transform
+        
+        self.TheCube.cube = theCube
     }
     
     func addSecondCube() {
@@ -91,7 +104,8 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         theCube.position = SCNVector3(0, -5, 0) // Put the cube at position (0, 0, 0)
         rootNode.addChildNode(theCube) // Add the cube node to the scene
-        initCubeTransform = theCube.transform
+        
+        self.TheOtherCube.cube = theCube
     }
     
     func assignMaterials(theCube:SCNNode, materials:[NSObject?]){
@@ -158,11 +172,9 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         rootNode.addChildNode(lightNode)
     }
     
-    
-    
     @MainActor
     func resetCube(){
-        translation = CGSize(width:1,height:1)
+        translation = CGPoint.zero
         rotAngle = CGSize.zero
         scale = SCNVector3(1,1,1)
         cameraNode.camera?.fieldOfView = 60
@@ -171,74 +183,83 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     @MainActor
     func firstUpdate() {
         reanimate() // Call reanimate on the first graphics update frame
+        updateUI()
     }
     
     @MainActor
     func reanimate() {
         
-        let theCube = rootNode.childNode(withName: "The Cube", recursively: true) // Get the cube object by its name (This is where line 39 comes in)
-        animateCube(theCube)
+        animateCube()
+        animateOtherCube()
         
-        let theOtherCube = rootNode.childNode(withName: "The Other Cube", recursively: true)
+//        let directionalLight = rootNode.childNode(withName: "Directional Light", recursively: true) // Get the cube object by its name (See line 56)
+//        directionalLight?.rotation = diffuseLightPos
+//        
+//        let flashLight = rootNode.childNode(withName: "Flashlight", recursively: true)
+//        flashLight?.position = SCNVector3(0, 5, flashlightPos)
+//        flashLight?.light!.spotOuterAngle = flashlightAngle
         
-        animateOtherCube(theOtherCube)
-        //        updateText(pos: theCube?.position, rot: theCube?.eulerAngles)
-
-        self.objectWillChange.send()
-        
-        let directionalLight = rootNode.childNode(withName: "Directional Light", recursively: true) // Get the cube object by its name (See line 56)
-        directionalLight?.rotation = diffuseLightPos
-        
-        let flashLight = rootNode.childNode(withName: "Flashlight", recursively: true)
-        flashLight?.position = SCNVector3(0, 5, flashlightPos)
-        flashLight?.light!.spotOuterAngle = flashlightAngle
-        
-        DispatchQueue.main.async{
-            let pos = theCube!.position
-            let rot = theCube!.eulerAngles
-            self.positionText = "\(pos.x), \(pos.y), \(pos.z)"
-            self.rotationText = "\(rot.x), \(rot.y), \(rot.z)"
-        }
-        
+       
         // Repeat increment of rotation every 10000 nanoseconds
-        Task { try! await Task.sleep(nanoseconds: 10000)
+        Task { try! await Task.sleep(nanoseconds: 1000)
             reanimate()
         }
     }
     
     @MainActor
-    func animateCube(_ theCube: SCNNode?){
-        if(isRotating){
-            rot1.width += 0.5
-        }else{
-            theCube?.position = SCNVector3(translation.width / 50, translation.height / 50, 0)
-            rot1 = rotAngle
-            theCube?.scale = scale
+    func updateUI(){
+        
+        DispatchQueue.main.async{
+            self.positionText = "\(self.TheCube.cube.position.x), \(self.TheCube.cube.position.y), \(self.TheCube.cube.position.z)"
+//            self.rotationText = "\(self.TheCube.cube.eulerAngles.x), \(self.TheCube.cube.eulerAngles.y), \(self.TheCube.cube.eulerAngles.z)"
         }
-        theCube?.eulerAngles = SCNVector3(rot1.height * rotationSpeed, rot1.width * rotationSpeed, 0)
+        // Repeat increment of rotation every 10000 nanoseconds
+        Task { try! await Task.sleep(nanoseconds: 320000000)
+            updateUI()
+        }
     }
     
     @MainActor
-    func animateOtherCube(_ theCube: SCNNode?){
+    func animateCube(){
         
-        rot2.width += 0.5
-        theCube?.eulerAngles = SCNVector3(rot2.height * rotationSpeed, rot2.width * rotationSpeed, 0)
+        if(isRotating){
+            self.TheCube.rot.width += rotationSpeed
+//            if(rot1.width > Double.pi * 2) {
+//                rot1.width = rot1.width.truncatingRemainder(dividingBy: Double.pi)
+//            }
+            rotAngle = self.TheCube.rot
+        }else{
+//            self.TheCube.cube.position = SCNVector3(translation.x / 50, translation.y / 50, 0)
+            self.TheCube.cube.position = SCNVector3(translation.x / 50, -translation.y / 50, 0)
+            self.TheCube.rot = rotAngle
+            self.TheCube.cube.scale = scale
+        }
+        self.TheCube.cube.eulerAngles = SCNVector3(self.TheCube.rot.height, self.TheCube.rot.width, 0)
     }
     
-    func updateText(pos:SCNVector3?, rot:SCNVector3?){
-        
+    @MainActor
+    func animateOtherCube(){
+//        if(rot2.width > Double.pi * 2) {
+//            rot2.width = 0
+//        }
+//        if(rot2.height > Double.pi * 2) {
+//            rot2.height = 0
+//        }
+        self.TheOtherCube.rot.width += rotationSpeed
+        self.TheOtherCube.rot.height += rotationSpeed
+        self.TheOtherCube.cube.eulerAngles = SCNVector3(self.TheOtherCube.rot.height, self.TheOtherCube.rot.width, 0)
     }
     
     @MainActor
     func handleDoubleTap() {
         isRotating = !isRotating // Toggle rotation
-        isFreeCam = !isFreeCam // Toggle free cam
     }
     
     @MainActor
-    func handleDrag(_ offset: CGSize){
-        rotAngle = offset
-        diffuseLightPos = SCNVector4(offset.height, offset.width, 0, Double.pi/2)
+    func handleDrag(_ offset: CGPoint){
+        print(offset)
+        rotAngle = CGSize(width: rotAngle.width + offset.x * dragSpeed, height: rotAngle.height + offset.y * dragSpeed)
+        //diffuseLightPos = SCNVector4(offset.height, offset.width, 0, Double.pi/2)
     }
     
     @MainActor
@@ -249,7 +270,9 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
     }
     
     @MainActor
-    func handleDoubleDrag(_ offset: CGSize){
+    func handleDoubleDrag(_ offset:CGPoint){
+        if(isRotating){return}
+
         translation = offset
         print(offset)
     }
