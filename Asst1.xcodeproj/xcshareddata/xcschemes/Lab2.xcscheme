@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B56BB6C32B57307700FA0708"
-               BuildableName = "Lab2.app"
-               BlueprintName = "Lab2"
+               BuildableName = "Asst1.app"
+               BlueprintName = "Asst1"
                ReferencedContainer = "container:Asst1.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -68,8 +68,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B56BB6C32B57307700FA0708"
-            BuildableName = "Lab2.app"
-            BlueprintName = "Lab2"
+            BuildableName = "Asst1.app"
+            BlueprintName = "Asst1"
             ReferencedContainer = "container:Asst1.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -85,8 +85,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B56BB6C32B57307700FA0708"
-            BuildableName = "Lab2.app"
-            BlueprintName = "Lab2"
+            BuildableName = "Asst1.app"
+            BlueprintName = "Asst1"
             ReferencedContainer = "container:Asst1.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
