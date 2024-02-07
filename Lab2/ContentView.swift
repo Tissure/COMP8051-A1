@@ -31,14 +31,6 @@ class CustomImageView: UIView, UIGestureRecognizerDelegate {
         dragGesture.delegate = self
         addGestureRecognizer(dragGesture)
         
-//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-//        panGesture.minimumNumberOfTouches = 2
-//        panGesture.maximumNumberOfTouches = 2
-//        panGesture.delegate = self
-//        addGestureRecognizer(panGesture)
-//        
-//        dragGesture.require(toFail: panGesture)
-        
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         pinchGesture.delegate = self
         addGestureRecognizer(pinchGesture)
@@ -102,142 +94,45 @@ struct ContentView: View {
             List {
                 NavigationLink{
                     ZStack{
-                        
                         SceneView(scene: mainScene, pointOfView: mainScene.cameraNode)
                             .ignoresSafeArea()
-                    
                         ZoomAndPanAndRotationView(mainScene: mainScene)
                             .ignoresSafeArea()
-                        
                         VStack{
                             Spacer()
                             Group{
-                                Text(mainScene.positionText)
+                                Text("Position: " + mainScene.positionText)
                                     .foregroundStyle(.red).font(.system(size: 20))
-//                                Text(mainScene.rotationText)
-//                                    .foregroundStyle(.red).font(.system(size: 20))
+                                Text("Rotation: " + mainScene.rotationText)
+                                    .foregroundStyle(.red).font(.system(size: 20))
                             }
                             HStack{
                                 Button(action: {
                                     mainScene.toggleLights(1)
                                 }){
-                                    Text("1").font(.system(size: 24))
+                                    Text("Ambient").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
                                 Button(action: {
                                     mainScene.toggleLights(2)
                                 }){
-                                    Text("2").font(.system(size: 24))
+                                    Text("Diffuse").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
                                 Button(action: {
                                     mainScene.toggleLights(3)
                                 }){
-                                    Text("3").font(.system(size: 24))
+                                    Text("Spot").font(.system(size: 24))
                                 }.buttonStyle(.bordered)
-                                Button(action: {
-                                    mainScene.resetCube()
-                                }){
-                                    Text("Reset Cube").font(.system(size: 24))
-                                }.buttonStyle(.bordered)
+                                
                             }
+                            Button(action: {
+                                mainScene.resetCube()
+                            }){
+                                Text("Reset Cube").font(.system(size: 24))
+                            }.buttonStyle(.bordered)
                         }
                         
                     }
                 } label: { Text("Assignment 1") }
-//                NavigationLink{
-//                    let scene = RedSquare()
-//                    SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                        .ignoresSafeArea()
-//                } label: { Text("Lab 1: Red square") }
-//                NavigationLink{
-//                    let scene = RotatingColouredCube()
-//                    SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                        .ignoresSafeArea()
-//                        .onTapGesture(count: 2) {
-//                            scene.handleDoubleTap()
-//                        }
-//                } label: { Text("Lab 2: Rotating cube") }
-//                NavigationLink{
-//                    let scene = RotatingCrate()
-//                    SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                        .ignoresSafeArea()
-//                        .onTapGesture(count: 2) {
-//                            scene.handleDoubleTap()
-//                        }
-//                } label: { Text("Lab 3: Textured cube") }
-//                NavigationLink{
-//                    let scene = ControlableRotatingCrate()
-//                    SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                        .ignoresSafeArea()
-//                        .onTapGesture(count: 2) {
-//                            scene.handleDoubleTap()
-//                        }
-//                        .gesture(
-//                            DragGesture()
-//                                .onChanged{ gesture in
-//                                    scene.handleDrag(offset: gesture.translation)
-//                                }
-//                        )
-//                } label: { Text("Lab 4: Rotatable cube") }
-//                NavigationLink{
-//                    let scene = ControlableRotatingCrateWithText()
-//                    ZStack {
-//                        SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                            .ignoresSafeArea()
-//                            .onTapGesture(count: 2) {
-//                                scene.handleDoubleTap()
-//                            }
-//                            .gesture(
-//                                DragGesture()
-//                                    .onChanged{ gesture in
-//                                        scene.handleDrag(offset: gesture.translation)
-//                                    }
-//                            )
-//                        Text("Hello World")
-//                            .foregroundStyle(.white)
-//                    }
-//                } label: { Text("Lab 5: Text examples") }
-//                NavigationLink{
-//                    let scene = RotatingCrateLight()
-//                    SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                        .ignoresSafeArea()
-//                        .onTapGesture(count: 2) {
-//                            scene.handleDoubleTap()
-//                        }
-//                        .gesture(
-//                            DragGesture()
-//                                .onChanged{ gesture in
-//                                    scene.handleDrag(offset: gesture.translation)
-//                                }
-//                        )
-//                } label: { Text("Lab 6: Diffuse lighting") }
-//                NavigationLink{
-//                    let scene = RotatingCrateFlashlight()
-//                    SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                        .ignoresSafeArea()
-//                        .onTapGesture(count: 2) {
-//                            scene.handleDoubleTap()
-//                        }
-//                        .gesture(
-//                            DragGesture()
-//                                .onChanged{ gesture in
-//                                    scene.handleDrag(offset: gesture.translation)
-//                                }
-//                        )
-//                } label: { Text("Lab 7: Spotlight (flashlight)") }
-//                NavigationLink{
-//                    let scene = RotatingCrateFog()
-//                    SceneView(scene: scene, pointOfView: scene.cameraNode)
-//                        .ignoresSafeArea()
-//                        .onTapGesture(count: 2) {
-//                            scene.handleDoubleTap()
-//                        }
-//                        .gesture(
-//                            DragGesture()
-//                                .onChanged{ gesture in
-//                                    scene.handleDrag(offset: gesture.translation)
-//                                }
-//                        )
-//                } label: { Text("Lab 8: Fog") }
             }.navigationTitle("COMP8051")
         }
     }

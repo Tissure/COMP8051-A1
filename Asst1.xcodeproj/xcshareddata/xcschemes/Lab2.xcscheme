@@ -17,7 +17,7 @@
                BlueprintIdentifier = "B56BB6C32B57307700FA0708"
                BuildableName = "Lab2.app"
                BlueprintName = "Lab2"
-               ReferencedContainer = "container:Lab2.xcodeproj">
+               ReferencedContainer = "container:Asst1.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -37,7 +37,7 @@
                BlueprintIdentifier = "B56BB6D32B57307800FA0708"
                BuildableName = "Lab2Tests.xctest"
                BlueprintName = "Lab2Tests"
-               ReferencedContainer = "container:Lab2.xcodeproj">
+               ReferencedContainer = "container:Asst1.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -48,7 +48,7 @@
                BlueprintIdentifier = "B56BB6DD2B57307800FA0708"
                BuildableName = "Lab2UITests.xctest"
                BlueprintName = "Lab2UITests"
-               ReferencedContainer = "container:Lab2.xcodeproj">
+               ReferencedContainer = "container:Asst1.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -70,7 +70,7 @@
             BlueprintIdentifier = "B56BB6C32B57307700FA0708"
             BuildableName = "Lab2.app"
             BlueprintName = "Lab2"
-            ReferencedContainer = "container:Lab2.xcodeproj">
+            ReferencedContainer = "container:Asst1.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -87,7 +87,7 @@
             BlueprintIdentifier = "B56BB6C32B57307700FA0708"
             BuildableName = "Lab2.app"
             BlueprintName = "Lab2"
-            ReferencedContainer = "container:Lab2.xcodeproj">
+            ReferencedContainer = "container:Asst1.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

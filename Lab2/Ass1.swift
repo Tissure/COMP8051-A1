@@ -24,6 +24,7 @@ struct CubeInstance {
 
 public class DraggableRotatingCube: SCNScene, ObservableObject {
     @Published var positionText:String = "a"
+    @Published var rotationText:String = "a"
     
     var TheCube:CubeInstance = CubeInstance()
     var TheOtherCube:CubeInstance = CubeInstance()
@@ -177,7 +178,6 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         translation = CGPoint(x: CGFloat(TheCube.initPos.x) / panSpeed, y: CGFloat(TheCube.initPos.y) / panSpeed)
         rotAngle = CGSize.zero
         scale = SCNVector3(1,1,1)
-        cameraNode.camera?.fieldOfView = 60
     }
     
     @MainActor
@@ -192,8 +192,8 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         animateCube()
         animateOtherCube()
-        // Repeat increment of rotation every 10000 nanoseconds
-        Task { try! await Task.sleep(nanoseconds: 1000)
+        // Repeat increment of rotation every 10000000 nanoseconds
+        Task { try! await Task.sleep(nanoseconds: 10000000)
             reanimate()
         }
     }
@@ -203,8 +203,9 @@ public class DraggableRotatingCube: SCNScene, ObservableObject {
         
         DispatchQueue.main.async{
             self.positionText = "\(self.TheCube.cube.position.x), \(self.TheCube.cube.position.y), \(self.TheCube.cube.position.z)"
+            self.rotationText = "\(self.TheCube.cube.eulerAngles.x * 180 / Float.pi), \(self.TheCube.cube.eulerAngles.y * 180 / Float.pi), \(self.TheCube.cube.eulerAngles.z * 180 / Float.pi)"
         }
-        // Repeat increment of rotation every 10000 nanoseconds
+        // Repeat increment of rotation every 320000000 nanoseconds
         Task { try! await Task.sleep(nanoseconds: 320000000)
             updateUI()
         }

@@ -40,6 +40,7 @@
 		B56BB6D42B57307800FA0708 /* Lab2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Lab2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56BB6DE2B57307800FA0708 /* Lab2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Lab2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56BB6F52B5731FA00FA0708 /* C8051LabsApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8051LabsApp.swift; sourceTree = "<group>"; };
+		B5895FA72B730B7500B2EAE8 /* Asst1.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Asst1.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		B5D1BC122B6346E30067BB64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +96,7 @@
 				B56BB6C92B57307700FA0708 /* ContentView.swift */,
 				B56BB6CB2B57307800FA0708 /* Assets.xcassets */,
 				B56BB6CD2B57307800FA0708 /* Preview Content */,
+				B5895FA72B730B7500B2EAE8 /* Asst1.md */,
 			);
 			path = Lab2;
 			sourceTree = "<group>";
@@ -186,7 +188,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B56BB6BF2B57307700FA0708 /* Build configuration list for PBXProject "Lab2" */;
+			buildConfigurationList = B56BB6BF2B57307700FA0708 /* Build configuration list for PBXProject "Asst1" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -525,7 +527,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B56BB6BF2B57307700FA0708 /* Build configuration list for PBXProject "Lab2" */ = {
+		B56BB6BF2B57307700FA0708 /* Build configuration list for PBXProject "Asst1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B56BB6E62B57307800FA0708 /* Debug */,
