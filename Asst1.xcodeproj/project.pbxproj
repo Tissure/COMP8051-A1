@@ -72,7 +72,7 @@
 		B56BB6BB2B57307700FA0708 = {
 			isa = PBXGroup;
 			children = (
-				B56BB6C62B57307700FA0708 /* Lab2 */,
+				B56BB6C62B57307700FA0708 /* Asst1 */,
 				B56BB6C52B57307700FA0708 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B56BB6C62B57307700FA0708 /* Lab2 */ = {
+		B56BB6C62B57307700FA0708 /* Asst1 */ = {
 			isa = PBXGroup;
 			children = (
 				B5D1BC122B6346E30067BB64 /* Info.plist */,
@@ -98,7 +98,7 @@
 				B56BB6CD2B57307800FA0708 /* Preview Content */,
 				B5895FA72B730B7500B2EAE8 /* Asst1.md */,
 			);
-			path = Lab2;
+			path = Asst1;
 			sourceTree = "<group>";
 		};
 		B56BB6CD2B57307800FA0708 /* Preview Content */ = {
